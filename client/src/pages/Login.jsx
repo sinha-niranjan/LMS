@@ -85,7 +85,7 @@ const Login = () => {
     registerError,
   ]);
   return (
-    <div className="flex w-full items-center justify-center">
+    <div className="mt-20 flex w-full items-center justify-center">
       <Tabs defaultValue="signup" className="w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="signup">Signup</TabsTrigger>
