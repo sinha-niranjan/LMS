@@ -3,6 +3,7 @@ import Login from "@/pages/Login";
 import { useState } from "react";
 import "./App.css";
 import Navbar from "@/components/Navbar";
+import HeroSection from "@/pages/student/HeroSection";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -10,6 +11,7 @@ function App() {
   return (
     <main>
       <Navbar />
+      <HeroSection />
       <Login />
     </main>
   );
