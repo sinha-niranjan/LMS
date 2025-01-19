@@ -5,6 +5,7 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import MainLayout from "@/layouts/MainLayout";
 import Courses from "@/pages/student/Courses";
+import MyLearning from "@/pages/student/MyLearning";
 
 const appRouter = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const appRouter = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "my-learning",
+        element: <MyLearning />,
       },
     ],
   },

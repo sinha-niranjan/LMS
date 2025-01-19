@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/sheet";
 import DarkMode from "@/DarkMode";
 import { Menu, School } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const user = true;
@@ -29,12 +30,12 @@ const Navbar = () => {
     <div className="fixed left-0 right-0 top-0 z-10 h-16 border-b border-b-gray-200 bg-white duration-300 dark:border-b-gray-800 dark:bg-[#0A0A0A]">
       {/* Desktop */}
       <div className="mx-auto hidden h-full max-w-7xl items-center justify-between gap-10 md:flex">
-        <div className="flex items-center gap-3">
+        <Link to={"/"} className="flex items-center gap-3">
           <School size={"30"} />
           <h1 className="hidden text-2xl font-extrabold md:block">
             E-Learning
           </h1>
-        </div>
+        </Link>
         {/*  user icons and dark mode icon */}
         <div className="flex items-center gap-8">
           {user ? (
@@ -52,7 +53,9 @@ const Navbar = () => {
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem>My learning</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to={"/my-learning"}>My learning</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Edit Profile</DropdownMenuItem>
                   <DropdownMenuItem>Log out</DropdownMenuItem>
                 </DropdownMenuGroup>
@@ -107,7 +110,7 @@ const MobileNavbar = ({ role }) => {
         </SheetHeader>
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
-          <span>My Learning</span>
+          <Link to={"/my-learning"}>My Learning</Link>
           <span>Edit Profile</span>
           <p>Log out</p>
         </nav>
