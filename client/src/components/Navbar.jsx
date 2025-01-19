@@ -56,7 +56,9 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <Link to={"/my-learning"}>My learning</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to={"/profile"}>Edit Profile</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Log out</DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
@@ -111,7 +113,9 @@ const MobileNavbar = ({ role }) => {
         <Separator className="mr-2" />
         <nav className="flex flex-col space-y-4">
           <Link to={"/my-learning"}>My Learning</Link>
-          <span>Edit Profile</span>
+          <span>
+            <Link to={"/profile"}>Edit Profile</Link>
+          </span>
           <p>Log out</p>
         </nav>
         {role === "instructor" && (
