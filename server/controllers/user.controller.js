@@ -129,13 +129,11 @@ export const updateProfile = async (req, res) => {
       new: true,
     }).select("-password");
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        user: updateUser,
-        message: "Profile updated successfully",
-      });
+    return res.status(200).json({
+      success: true,
+      user: updateUser,
+      message: "Profile updated successfully",
+    });
   } catch (error) {
     console.log("Error : ", error);
     return res.status(500).json({
