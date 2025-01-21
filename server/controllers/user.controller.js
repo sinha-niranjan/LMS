@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
+import fs from "fs";
 
 export const register = async (req, res) => {
   try {
@@ -106,6 +107,7 @@ export const updateProfile = async (req, res) => {
   try {
     const userId = req.id;
     const { name } = req.body;
+    const filePath = req.file.path;
     const profilePhoto = req.file;
 
     const user = await User.findById(userId);
@@ -128,6 +130,13 @@ export const updateProfile = async (req, res) => {
     const updateUser = await User.findByIdAndUpdate(userId, updatedData, {
       new: true,
     }).select("-password");
+    fs.unlink(filePath, (err) => {
+      if (err) {
+        console.log("Error deleting file: ", err);
+      } else {
+        console.log("File deleted successfully");
+      }
+    });
 
     return res.status(200).json({
       success: true,
