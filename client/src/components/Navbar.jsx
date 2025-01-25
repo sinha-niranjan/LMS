@@ -80,14 +80,20 @@ const Navbar = () => {
                     Log out
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                {user?.role === "instructor " && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>Dashboard</DropdownMenuItem>
+                  </>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-4">
-              <Button variant="outline">Login</Button>
-              <Button>Signup</Button>
+              <Button variant="outline" onClick={() => navigate("/login")}>
+                Login
+              </Button>
+              <Button onClick={() => navigate("/login")}>Signup</Button>
             </div>
           )}
           <DarkMode />
@@ -98,7 +104,16 @@ const Navbar = () => {
 
       <div className="flex h-full items-center justify-between px-4 md:hidden">
         <h1 className="text-2xl font-extrabold">E-Learning</h1>
-        <MobileNavbar role={role} logoutHandler={logoutHandler} />
+        {user ? (
+          <MobileNavbar role={role} logoutHandler={logoutHandler} />
+        ) : (
+          <div className="flex items-center gap-4">
+            <Button variant="outline" onClick={() => navigate("/login")}>
+              Login
+            </Button>
+            <Button onClick={() => navigate("/login")}>Signup</Button>
+          </div>
+        )}
       </div>
     </div>
   );
