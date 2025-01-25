@@ -53,7 +53,7 @@ const Profile = () => {
     return <h1> Profile Loading ..... </h1>;
   }
 
-  const { user } = data;
+  const user = data && data?.user;
   const updateUserHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData();

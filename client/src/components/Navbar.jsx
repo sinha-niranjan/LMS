@@ -20,12 +20,31 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import DarkMode from "@/DarkMode";
+import { useLogoutUserMutation } from "@/features/api/authApi";
 import { Menu, School } from "lucide-react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const user = true;
   const role = "instructor";
+
+  const [logoutUser, { data, isLoading, isSuccess }] = useLogoutUserMutation();
+  const navigate = useNavigate();
+
+  const logoutHandler = async () => {
+    await logoutUser();
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data.message || "Logged out successfully");
+      navigate("/login");
+    }
+  }, [isSuccess]);
+
   return (
     <div className="fixed left-0 right-0 top-0 z-10 h-16 border-b border-b-gray-200 bg-white duration-300 dark:border-b-gray-800 dark:bg-[#0A0A0A]">
       {/* Desktop */}
@@ -59,7 +78,9 @@ const Navbar = () => {
                   <DropdownMenuItem>
                     <Link to={"/profile"}>Edit Profile</Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>Log out</DropdownMenuItem>
+                  <DropdownMenuItem onClick={logoutHandler}>
+                    Log out
+                  </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Dashboard</DropdownMenuItem>
@@ -79,7 +100,7 @@ const Navbar = () => {
 
       <div className="flex h-full items-center justify-between px-4 md:hidden">
         <h1 className="text-2xl font-extrabold">E-Learning</h1>
-        <MobileNavbar role={role} />
+        <MobileNavbar role={role} logoutHandler={logoutHandler} />
       </div>
     </div>
   );
@@ -87,7 +108,7 @@ const Navbar = () => {
 
 export default Navbar;
 
-const MobileNavbar = ({ role }) => {
+const MobileNavbar = ({ role, logoutHandler }) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -116,7 +137,7 @@ const MobileNavbar = ({ role }) => {
           <span>
             <Link to={"/profile"}>Edit Profile</Link>
           </span>
-          <p>Log out</p>
+          <p onClick={logoutHandler}>Log out</p>
         </nav>
         {role === "instructor" && (
           <SheetFooter>
