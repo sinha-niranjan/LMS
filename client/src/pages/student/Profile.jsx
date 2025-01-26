@@ -17,7 +17,6 @@ import {
 } from "@/features/api/authApi";
 import Course from "@/pages/student/Course";
 import { Loader2 } from "lucide-react";
-import { use } from "react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -64,6 +63,9 @@ const Profile = () => {
     setProfilePhoto("");
   };
 
+  useEffect(() => {
+    refetch();
+  }, []);
   return (
     <div className="mx-auto my-24 max-w-4xl px-4">
       <h1 className="text-center text-2xl font-bold md:text-left">PROFILE</h1>
