@@ -6,7 +6,7 @@ import { configureStore } from "@reduxjs/toolkit";
 export const appStore = configureStore({
   reducer: rootReducer,
   middleware: (defaultMiddleware) =>
-    defaultMiddleware().concat(authApi.middleware, courseAPi.middleware),
+    defaultMiddleware().concat(authApi.middleware).concat(courseAPi.middleware),
 });
 
 const initializeApp = async () => {
