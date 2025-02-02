@@ -14,18 +14,32 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useCreateCourseMutation } from "@/features/api/courseApi";
+import { useEffect } from "react";
+import { toast } from "sonner";
 
 const AddCourse = () => {
   const [courseTitle, setCourseTitle] = useState("");
   const [category, setCategory] = useState("");
+  const [createCourse, { data, error, isLoading, isSuccess }] =
+    useCreateCourseMutation();
   const navigate = useNavigate();
-  const isLoading = false;
+
   const getSelectedCategory = (value) => {
     setCategory(value);
   };
   const createCourseHandler = async () => {
-    console.log(courseTitle, category);
+    await createCourse({ courseTitle, category });
+    setCategory("");
+    setCourseTitle("");
   };
+
+  //  for displaying toast
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message || "Course created successfully");
+    }
+  }, [isSuccess, error]);
 
   return (
     <div className="mx-10 flex-1">
@@ -50,7 +64,7 @@ const AddCourse = () => {
         </div>
         <div>
           <Label>Category</Label>
-          <Select onValueChange={getSelectedCategory}>
+          <Select value={category} onValueChange={getSelectedCategory}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
