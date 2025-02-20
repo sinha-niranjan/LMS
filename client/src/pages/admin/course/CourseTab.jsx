@@ -36,7 +36,7 @@ const CourseTab = () => {
   const navigate = useNavigate();
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
-    setInput({ ...Input, [name]: value });
+    setInput({ ...input, [name]: value });
   };
   const selectCategory = (value) => {
     setInput({ ...input, category: value });
@@ -54,6 +54,9 @@ const CourseTab = () => {
       fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
       fileReader.readAsDataURL(file);
     }
+  };
+  const updateCourseHandler = () => {
+    console.log(input);
   };
   const isPublished = false;
   const isLoading = false;
@@ -172,7 +175,7 @@ const CourseTab = () => {
             >
               Cancel
             </Button>
-            <Button disabled={isLoading}>
+            <Button disabled={isLoading} onClick={updateCourseHandler}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
