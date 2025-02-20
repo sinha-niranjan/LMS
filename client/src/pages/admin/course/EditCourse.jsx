@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import CourseTab from "@/pages/admin/course/CourseTab";
 import React from "react";
 import { Link } from "react-router-dom";
 
@@ -9,10 +10,13 @@ const EditCourse = () => {
         <h1 className="text-xl font-bold">
           Add detail information regarding course{" "}
         </h1>
-        <Link>
-          <Button variant="link">Go to lectures page</Button>
+        <Link to={"lecture"}>
+          <Button className="hover:text-blue-900" variant="link">
+            Go to lectures page
+          </Button>
         </Link>
       </div>
+      <CourseTab />
     </div>
   );
 };
