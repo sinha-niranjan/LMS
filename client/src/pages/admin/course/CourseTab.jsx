@@ -23,6 +23,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const CourseTab = () => {
+  const [previewThumbnail, setPreviewThumbnail] = useState("");
   const [input, setInput] = useState({
     courseTitle: "",
     subTitle: "",
@@ -36,6 +37,23 @@ const CourseTab = () => {
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
     setInput({ ...Input, [name]: value });
+  };
+  const selectCategory = (value) => {
+    setInput({ ...input, category: value });
+  };
+  const selectCourseLevel = (value) => {
+    setInput({ ...input, courseLevel: value });
+  };
+
+  // get file
+  const selectThumbnaiL = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setInput({ ...input, courseThumbnail: file });
+      const fileReader = new FileReader();
+      fileReader.onloadend = () => setPreviewThumbnail(fileReader.result);
+      fileReader.readAsDataURL(file);
+    }
   };
   const isPublished = false;
   const isLoading = false;
@@ -84,7 +102,7 @@ const CourseTab = () => {
           <div className="flex items-center gap-5">
             <div>
               <Label>Category</Label>
-              <Select value={input.category} onValueChange={changeEventHandler}>
+              <Select onValueChange={selectCategory}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -105,10 +123,7 @@ const CourseTab = () => {
             </div>
             <div>
               <Label>Course Level</Label>
-              <Select
-                value={input.courseLevel}
-                onValueChange={changeEventHandler}
-              >
+              <Select onValueChange={selectCourseLevel}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a course level" />
                 </SelectTrigger>
@@ -136,10 +151,25 @@ const CourseTab = () => {
           </div>
           <div>
             <Label>Course Thumbnail</Label>
-            <Input type="file" accept="image/*" className="w-fit" />
+            <Input
+              type="file"
+              accept="image/*"
+              className="w-fit"
+              onChange={selectThumbnaiL}
+            />
+            {previewThumbnail && (
+              <img
+                src={previewThumbnail}
+                alt="Course Thumbnail"
+                className="my-2 w-64 object-cover"
+              />
+            )}
           </div>
           <div>
-            <Button variant="outline" onClick={() => navigate("/admin/course")}>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/admin/course ")}
+            >
               Cancel
             </Button>
             <Button disabled={isLoading}>
