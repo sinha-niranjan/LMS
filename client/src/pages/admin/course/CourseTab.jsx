@@ -21,7 +21,10 @@ import {
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useEditCourseMutation } from "../../../features/api/courseApi";
+import {
+  useEditCourseMutation,
+  useGetCourseByIdQuery,
+} from "../../../features/api/courseApi";
 import { useEffect } from "react";
 import { toast } from "sonner";
 import { useParams } from "react-router-dom";
@@ -40,7 +43,11 @@ const CourseTab = () => {
     courseThumbnail: "",
   });
   const navigate = useNavigate();
-
+  const {
+    data: getCourseData,
+    isLoading: getCourseIsLoading,
+    isSuccess: getCourseIsSuccess,
+  } = useGetCourseByIdQuery(courseId);
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
 
@@ -85,6 +92,22 @@ const CourseTab = () => {
     }
   }, [isSuccess, error]);
   const isPublished = false;
+
+  const course = getCourseData?.course;
+  useEffect(() => {
+    if (course) {
+      setInput({
+        courseTitle: course.courseTitle,
+        subTitle: course.subTitle,
+        description: course.description,
+        category: course.category,
+        courseLevel: course.courseLevel,
+        coursePrice: course.coursePrice,
+        courseThumbnail: "",
+      });
+      setPreviewThumbnail(course.courseThumbnail);
+    }
+  }, [course]);
 
   return (
     <Card>
@@ -131,7 +154,7 @@ const CourseTab = () => {
           <div className="flex items-center gap-5">
             <div>
               <Label>Category</Label>
-              <Select onValueChange={selectCategory}>
+              <Select value={input.category} onValueChange={selectCategory}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -152,7 +175,10 @@ const CourseTab = () => {
             </div>
             <div>
               <Label>Course Level</Label>
-              <Select onValueChange={selectCourseLevel}>
+              <Select
+                value={input.courseLevel}
+                onValueChange={selectCourseLevel}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select a course level" />
                 </SelectTrigger>
