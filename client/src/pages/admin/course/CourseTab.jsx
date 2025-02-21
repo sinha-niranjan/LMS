@@ -47,7 +47,7 @@ const CourseTab = () => {
     data: getCourseData,
     isLoading: getCourseIsLoading,
     isSuccess: getCourseIsSuccess,
-  } = useGetCourseByIdQuery(courseId);
+  } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
 
@@ -93,21 +93,23 @@ const CourseTab = () => {
   }, [isSuccess, error]);
   const isPublished = false;
 
-  const course = getCourseData?.course;
   useEffect(() => {
-    if (course) {
+    if (getCourseData?.course) {
+      const course = getCourseData?.course;
       setInput({
-        courseTitle: course.courseTitle,
-        subTitle: course.subTitle,
-        description: course.description,
-        category: course.category,
-        courseLevel: course.courseLevel,
-        coursePrice: course.coursePrice,
-        courseThumbnail: "",
+        courseTitle: course?.courseTitle || "",
+        subTitle: course?.subTitle || "",
+        description: course?.description || "",
+        category: course?.category || "",
+        courseLevel: course?.courseLevel || "",
+        coursePrice: course?.coursePrice || "",
+        courseThumbnail: course?.courseThumbnail || "",
       });
-      setPreviewThumbnail(course.courseThumbnail);
+      setPreviewThumbnail(course?.courseThumbnail || "");
     }
-  }, [course]);
+  }, [getCourseData]);
+
+  if (getCourseIsLoading) return <Loader2 className="animate-spin" />;
 
   return (
     <Card>

@@ -18,7 +18,7 @@ const Sidebar = () => {
           </Link>
         </div>
       </div>
-      <div className="flex-1 bg-white p-2 md:p-24">
+      <div className="max-w-7xl flex-1 bg-white p-2 md:p-24">
         <Outlet />
       </div>
     </div>
