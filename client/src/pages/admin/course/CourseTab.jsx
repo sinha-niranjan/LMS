@@ -223,10 +223,7 @@ const CourseTab = () => {
             )}
           </div>
           <div>
-            <Button
-              variant="outline"
-              onClick={() => navigate("/admin/course ")}
-            >
+            <Button variant="outline" onClick={() => navigate("/admin/course")}>
               Cancel
             </Button>
             <Button disabled={isLoading} onClick={updateCourseHandler}>
