@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useCreateLectureMutation } from "@/features/api/courseApi";
+import {
+  useCreateLectureMutation,
+  useGetCourseLectureQuery,
+} from "@/features/api/courseApi";
+import Lecture from "@/pages/admin/lecture/Lecture";
 import { Loader2 } from "lucide-react";
 import React from "react";
 import { useEffect } from "react";
@@ -17,12 +21,20 @@ const CreateLecture = () => {
 
   const [createLecture, { data, isLoading, isSuccess, error }] =
     useCreateLectureMutation();
+  const {
+    data: lectureData,
+    isLoading: lectureLoading,
+    error: lectureError,
+    isSuccess: lectureSuccess,
+    refetch,
+  } = useGetCourseLectureQuery(courseId);
   const createLectureHandler = async () => {
     await createLecture({ lectureTitle, courseId });
   };
 
   useEffect(() => {
     if (isSuccess) {
+      refetch();
       toast.success(data?.message || "Lecture created successfully");
     }
     if (error) {
@@ -71,6 +83,24 @@ const CreateLecture = () => {
               "Create lecture"
             )}
           </Button>
+        </div>
+        <div className="mt-10">
+          {lectureLoading ? (
+            <p>Lecture Loading .... </p>
+          ) : lectureError ? (
+            <p> Failed to Load Lectures </p>
+          ) : lectureData.lectures.length === 0 ? (
+            <p>No lecture available</p>
+          ) : (
+            lectureData?.lectures.map((lecture, index) => (
+              <Lecture
+                key={lecture._id}
+                lecture={lecture}
+                index={index}
+                courseId={courseId}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
