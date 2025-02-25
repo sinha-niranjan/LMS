@@ -40,8 +40,8 @@ const LectureTab = () => {
         if (res.data.success) {
           console.log(res.data);
           setUploadVideoInfo({
-            videUrl: res.data.data.url,
-            publicId: res.data.data.public_id,
+            videoUrl: res.data?.data?.url,
+            publicId: res.data?.data?.public_id,
           });
           setBtnDisabled(false);
           toast.success(res.data.message || "Video Uploaded successfully");
@@ -68,7 +68,12 @@ const LectureTab = () => {
       <CardContent>
         <div>
           <Label> Title</Label>
-          <Input type="text" placeholder="Ex. Introduction to Javascript" />
+          <Input
+            type="text"
+            placeholder="Ex. Introduction to Javascript"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
         </div>
         <div className="my-5">
           <Label>
