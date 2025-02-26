@@ -10,10 +10,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
+import { useEditLectureMutation } from "@/features/api/courseApi";
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const MEDIA_API = "http://localhost:8080/api/v1/media";
 
@@ -25,6 +28,11 @@ const LectureTab = () => {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
+  const params = useParams();
+  const courseId = params.courseId;
+  const lectureId = params.lectureId;
+  const [editLecture, { data, isSuccess, isLoading, error }] =
+    useEditLectureMutation();
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -54,6 +62,22 @@ const LectureTab = () => {
       }
     }
   };
+  const editLectureHandler = async () => {
+    try {
+      await editLecture({
+        lectureTitle: title,
+        videoInfo: uploadVideoInfo,
+        isPreviewFree: isFree,
+        courseId,
+        lectureId,
+      });
+    } catch (error) {}
+  };
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success(data?.message)
+    }
+  }, [isSuccess, error]);
   return (
     <Card>
       <CardHeader className="flex justify-between">
@@ -98,7 +122,7 @@ const LectureTab = () => {
           </div>
         )}
         <div className="mt-4">
-          <Button>Update Lecture</Button>
+          <Button onClick={editLectureHandler}>Update Lecture</Button>
         </div>
       </CardContent>
     </Card>
