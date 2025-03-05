@@ -189,14 +189,14 @@ export const editLecture = async (req, res) => {
 
     // update lecture
     if (lectureTitle) lecture.lectureTitle = lectureTitle;
-    if (videoInfo.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
-    if (videoInfo.publicId) lecture.publicId = videoInfo.publicId;
+    if (videoInfo?.videoUrl) lecture.videoUrl = videoInfo.videoUrl;
+    if (videoInfo?.publicId) lecture.publicId = videoInfo.publicId;
     if (isPreviewFree) lecture.isPreviewFree = isPreviewFree;
 
     await lecture.save();
 
     const course = await Course.findById(courseId);
-    if (course && course.lectures.includes(lecture._id)) {
+    if (course && !course.lectures.includes(lecture._id)) {
       course.lectures.push(lecture._id);
       await course.save();
     }

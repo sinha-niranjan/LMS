@@ -10,13 +10,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
-import { useEditLectureMutation } from "@/features/api/courseApi";
+import {
+  useEditLectureMutation,
+  useRemoveLectureMutation,
+} from "@/features/api/courseApi";
 import axios from "axios";
-import React from "react";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useEffect } from "react";
+import { toast } from "sonner";
 
 const MEDIA_API = "http://localhost:8080/api/v1/media";
 
@@ -33,6 +35,10 @@ const LectureTab = () => {
   const lectureId = params.lectureId;
   const [editLecture, { data, isSuccess, isLoading, error }] =
     useEditLectureMutation();
+  const [
+    removeLecture,
+    { data: removeData, isLoading: removeLoading, isSuccess: removeSuccess },
+  ] = useRemoveLectureMutation();
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -75,9 +81,22 @@ const LectureTab = () => {
   };
   useEffect(() => {
     if (isSuccess) {
-      toast.success(data?.message)
+      toast.success(data?.message || "Video Uploaded successfully");
+    }
+    if (error) {
+      toast.error(error.data.message || "Failed to update video");
     }
   }, [isSuccess, error]);
+  useEffect(() => {
+    if (removeSuccess) {
+      toast.success(removeData?.message || "Lecture removed successfully");
+    }
+  }, [removeSuccess]);
+
+  const removeLectureHandler = async () => {
+    await removeLecture(lectureId);
+  };
+
   return (
     <Card>
       <CardHeader className="flex justify-between">
@@ -86,7 +105,20 @@ const LectureTab = () => {
           <CardDescription>Make Changes and click when done .</CardDescription>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="destructive">Remove Lecture</Button>
+          <Button
+            disabled={removeLoading}
+            variant="destructive"
+            onClick={removeLectureHandler}
+          >
+            {removeLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please wait
+              </>
+            ) : (
+              "Remove Lecture"
+            )}
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -112,7 +144,11 @@ const LectureTab = () => {
           />
         </div>
         <div className="my-5 flex items-center space-x-2">
-          <Switch id="free-video" />
+          <Switch
+            id="free-video"
+            checked={isFree}
+            onCheckedChange={setIsFree}
+          />
           <Label htmlFor="free-video">Is this video FREE</Label>
         </div>
         {mediaProgress && (
@@ -122,7 +158,19 @@ const LectureTab = () => {
           </div>
         )}
         <div className="mt-4">
-          <Button onClick={editLectureHandler}>Update Lecture</Button>
+          <Button
+            disabled={mediaProgress || isLoading}
+            onClick={editLectureHandler}
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Please Wait
+              </>
+            ) : (
+              "Update Lecture"
+            )}
+          </Button>
         </div>
       </CardContent>
     </Card>

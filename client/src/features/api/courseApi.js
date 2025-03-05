@@ -66,6 +66,14 @@ export const courseApi = createApi({
         method: "POST",
         body: { lectureTitle, videoInfo, isPreviewFree },
       }),
+      invalidatesTags: ["Refetch_Lecture"],
+    }),
+    removeLecture: builder.mutation({
+      query: (lectureId) => ({
+        url: `/lecture/${lectureId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Refetch_Lecture"],
     }),
   }),
 });
@@ -78,4 +86,5 @@ export const {
   useCreateLectureMutation,
   useGetCourseLectureQuery,
   useEditLectureMutation,
+  useRemoveLectureMutation,
 } = courseApi;
