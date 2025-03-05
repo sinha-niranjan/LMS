@@ -12,6 +12,7 @@ import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import {
   useEditLectureMutation,
+  useGetLectureByIdQuery,
   useRemoveLectureMutation,
 } from "@/features/api/courseApi";
 import axios from "axios";
@@ -39,6 +40,15 @@ const LectureTab = () => {
     removeLecture,
     { data: removeData, isLoading: removeLoading, isSuccess: removeSuccess },
   ] = useRemoveLectureMutation();
+  const { data: lectureData } = useGetLectureByIdQuery(lectureId);
+  const lecture = lectureData?.lecture;
+  useEffect(() => {
+    if (lecture) {
+      setTitle(lecture.lectureTitle);
+      setIsFree(lecture.isPreviewFree);
+      setUploadVideoInfo(lecture.videoInfo);
+    }
+  }, [lecture]);
   const fileChangeHandler = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -166,6 +176,11 @@ const LectureTab = () => {
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Please Wait
+              </>
+            ) : mediaProgress ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                uploading
               </>
             ) : (
               "Update Lecture"
