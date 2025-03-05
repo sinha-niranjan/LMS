@@ -80,6 +80,7 @@ export const courseApi = createApi({
         url: `/lecture/${lectureId}`,
         method: "GET",
       }),
+      providesTags: ["Refetch_Lecture"],
     }),
   }),
 });
