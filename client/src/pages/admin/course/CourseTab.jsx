@@ -24,6 +24,7 @@ import { useNavigate } from "react-router-dom";
 import {
   useEditCourseMutation,
   useGetCourseByIdQuery,
+  usePublishCourseMutation,
 } from "../../../features/api/courseApi";
 import { useEffect } from "react";
 import { toast } from "sonner";
@@ -47,9 +48,11 @@ const CourseTab = () => {
     data: getCourseData,
     isLoading: getCourseIsLoading,
     isSuccess: getCourseIsSuccess,
+    refetch,
   } = useGetCourseByIdQuery(courseId, { refetchOnMountOrArgChange: true });
   const [editCourse, { data, isLoading, isSuccess, error }] =
     useEditCourseMutation();
+  const [publishCourse] = usePublishCourseMutation();
 
   const changeEventHandler = (e) => {
     const { name, value } = e.target;
@@ -83,6 +86,17 @@ const CourseTab = () => {
     formData.append("courseThumbnail", input.courseThumbnail);
     await editCourse({ formData, courseId });
   };
+  const publishStatusHandler = async (action) => {
+    try {
+      const response = await publishCourse({ courseId, query: action });
+      if (response.data) {
+        refetch();
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to publish or unpublish course");
+    }
+  };
   useEffect(() => {
     if (isSuccess) {
       toast.success(data.message || `Course updated successfully`);
@@ -91,7 +105,6 @@ const CourseTab = () => {
       toast.error(error.message || `Failed to update course`);
     }
   }, [isSuccess, error]);
-  const isPublished = false;
 
   useEffect(() => {
     if (getCourseData?.course) {
@@ -121,8 +134,15 @@ const CourseTab = () => {
           </CardDescription>
         </div>
         <div className="space-x-2">
-          <Button variant="outline">
-            {isPublished ? "Unpublish" : "Publish"}
+          <Button
+            variant="outline"
+            onClick={() =>
+              publishStatusHandler(
+                getCourseData?.course?.isPublished ? false : true,
+              )
+            }
+          >
+            {getCourseData?.course?.isPublished ? "Unpublish" : "Publish"}
           </Button>
           <Button>Remove Course</Button>
         </div>
