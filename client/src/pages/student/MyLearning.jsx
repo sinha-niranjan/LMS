@@ -3,7 +3,7 @@ import React from "react";
 
 const MyLearning = () => {
   const isLoading = false;
-  const myLearningCourses = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  const myLearningCourses = [];
   return (
     <div className="mx-auto my-24 max-w-4xl px-4 md:px-0">
       <h1 className="text-2xl font-bold">MY LEARNING</h1>
@@ -15,7 +15,7 @@ const MyLearning = () => {
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
             {myLearningCourses?.map((course, index) => (
-              <Course key={index} />
+              <Course key={index} course={course} />
             ))}
           </div>
         )}
