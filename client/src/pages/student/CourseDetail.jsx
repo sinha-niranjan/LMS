@@ -1,3 +1,4 @@
+import BuyCourseButton from "@/components/BuyCourseButton";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,7 +16,7 @@ import { BadgeInfo } from "lucide-react";
 import React from "react";
 
 const CourseDetail = () => {
-  const purchasedCourse = true;
+  const purchasedCourse = false;
   return (
     <div className="mt-18 space-y-5">
       <div className="bg-[#2D2F31] text-white">
@@ -79,7 +80,7 @@ const CourseDetail = () => {
               {purchasedCourse ? (
                 <Button>Continue Course</Button>
               ) : (
-                <Button>Purchase Course</Button>
+                <BuyCourseButton />
               )}
             </CardFooter>
           </Card>
