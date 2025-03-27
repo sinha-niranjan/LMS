@@ -150,7 +150,7 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
   try {
     const { courseId } = req.params;
     const userId = req.id;
-
+    // console.log("CourseID : ", courseId);
     const course = await Course.findById(courseId)
       .populate({
         path: "creator",
@@ -168,7 +168,7 @@ export const getCourseDetailWithPurchaseStatus = async (req, res) => {
       purchased: purchased ? true : false,
     });
   } catch (error) {
-    console.log(error);
+    console.log("getCourse Detail with purchase", error);
   }
 };
 
