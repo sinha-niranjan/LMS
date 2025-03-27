@@ -85,7 +85,9 @@ const CourseDetail = () => {
                 <ReactPlayer
                   width={"100%"}
                   height={"100%"}
-                  url={course.lectures[0].videoUrl}
+                  url={
+                    course.lectures.length > 0 && course.lectures[0].videoUrl
+                  }
                   controls={true}
                 />
               </div>
@@ -97,7 +99,12 @@ const CourseDetail = () => {
             </CardContent>
             <CardFooter className="flex justify-center p-4">
               {purchased ? (
-                <Button onClick={handleContinueCourse}>Continue Course</Button>
+                <Button
+                  onClick={handleContinueCourse}
+                  className="bg-green-600 font-semibold hover:bg-green-500"
+                >
+                  Continue Course
+                </Button>
               ) : (
                 <BuyCourseButton courseId={courseId} />
               )}
