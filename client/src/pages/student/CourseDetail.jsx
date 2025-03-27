@@ -9,13 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { LockIcon } from "lucide-react";
-import { Lock } from "lucide-react";
-import { PlayCircle } from "lucide-react";
-import { BadgeInfo } from "lucide-react";
-import React from "react";
+import { BadgeInfo, Lock, PlayCircle } from "lucide-react";
+import { useParams } from "react-router-dom";
 
 const CourseDetail = () => {
+  const params = useParams();
+  const courseId = params.courseId;
   const purchasedCourse = false;
   return (
     <div className="mt-18 space-y-5">
@@ -80,7 +79,7 @@ const CourseDetail = () => {
               {purchasedCourse ? (
                 <Button>Continue Course</Button>
               ) : (
-                <BuyCourseButton />
+                <BuyCourseButton courseId={courseId} />
               )}
             </CardFooter>
           </Card>

@@ -8,7 +8,7 @@ import {
 const router = express.Router();
 
 router
-  .route("checkout/create-checkout-session")
+  .route("/checkout/create-checkout-session")
   .post(isAuthenticated, createCheckoutSession);
 router
   .route("/webhook")

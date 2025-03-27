@@ -1,6 +1,8 @@
 import Stripe from "stripe";
 import { Course } from "../models/course.model.js";
 import { CoursePurchase } from "../models/coursePurchase.model.js";
+import User from "../models/user.model.js";
+import { Lecture } from "../models/lecture.model.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
@@ -10,7 +12,7 @@ export const createCheckoutSession = async (req, res) => {
     const { courseId } = req.body;
     const course = await Course.findById(courseId);
     if (!course) {
-      res.status(404).json({
+      return res.status(404).json({
         message: "Course not found !! ",
       });
     }
@@ -19,12 +21,12 @@ export const createCheckoutSession = async (req, res) => {
     const newPurchase = new CoursePurchase({
       courseId,
       userId,
-      amount: course.coursePrice,
+      amount: course?.coursePrice,
       status: "pending",
     });
 
     // Create a stripe checkout
-    const session = await Stripe.Checkout.session.create({
+    const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
         {
@@ -75,7 +77,6 @@ export const createCheckoutSession = async (req, res) => {
   }
 };
 
-
 export const stripeWebhook = async (req, res) => {
   let event;
 
@@ -85,7 +86,7 @@ export const stripeWebhook = async (req, res) => {
 
     const header = stripe.webhooks.generateTestHeaderString({
       payload: payloadString,
-      secret, 
+      secret,
     });
 
     event = stripe.webhooks.constructEvent(payloadString, header, secret);
