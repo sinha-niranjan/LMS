@@ -1,3 +1,4 @@
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -5,6 +6,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 const Course = ({ course }) => {
+  if (!course) return <LoadingSpinner />;
+  console.log(course);
   return (
     <Link to={`/course-detail/${course._id}`}>
       <Card className="transform overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-2xl dark:bg-gray-800">
@@ -27,21 +30,21 @@ const Course = ({ course }) => {
                   alt={course?.creator?.name}
                 />
                 <AvatarFallback>
-                  {`${course.creator.name.split(" ")[0][0]} ${course.creator.name.split(" ")[1][0]}`}
+                  {`${course?.creator.name.split(" ")[0][0]} ${course?.creator?.name.split(" ")[1][0]}`}
                 </AvatarFallback>
               </Avatar>
-              <h1 className="text-sm font-medium">{course.creator.name}</h1>
+              <h1 className="text-sm font-medium">{course?.creator?.name}</h1>
             </div>
             <Badge
               className={
                 "rounded-full bg-blue-600 px-2 py-1 text-xs text-white hover:bg-blue-800"
               }
             >
-              {course.courseLevel}
+              {course?.courseLevel}
             </Badge>
           </div>
           <div>
-            <span className="text-lg font-bold">₹{course.coursePrice}</span>
+            <span className="text-lg font-bold">₹{course?.coursePrice}</span>
           </div>
         </CardContent>
       </Card>

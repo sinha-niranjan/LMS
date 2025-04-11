@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "../utils/generateToken.js";
 import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 import fs from "fs";
+import { populate } from "dotenv";
 
 export const register = async (req, res) => {
   try {
@@ -87,7 +88,9 @@ export const logout = async (req, res) => {
 export const getUserProfile = async (req, res) => {
   try {
     const userId = req.id;
-    const user = await User.findById(userId).select("-password");
+    const user = await User.findById(userId)
+      .select("-password")
+      .populate({ path: "enrolledCourses", populate: { path: "creator" } });
     if (!user) {
       return res
         .status(404)
@@ -107,8 +110,8 @@ export const updateProfile = async (req, res) => {
   try {
     const userId = req.id;
     const { name } = req.body;
-    const filePath = req.file.path;
-    const profilePhoto = req.file;
+    const filePath = req?.file?.path;
+    const profilePhoto = req?.file;
 
     const user = await User.findById(userId);
     if (!user) {
@@ -123,21 +126,34 @@ export const updateProfile = async (req, res) => {
     }
 
     // upload new photo
-    const cloudResponse = await uploadMedia(profilePhoto.path);
-    const photoUrl = cloudResponse.secure_url;
-    const updatedData = { name, photoUrl };
+    if (profilePhoto) {
+      const cloudResponse = await uploadMedia(profilePhoto.path);
+      const photoUrl = cloudResponse.secure_url;
+      const updatedData = { name, photoUrl };
 
-    const updateUser = await User.findByIdAndUpdate(userId, updatedData, {
+      const updateUser = await User.findByIdAndUpdate(userId, updatedData, {
+        new: true,
+      }).select("-password");
+
+      if (filePath)
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log("Error deleting file: ", err);
+          } else {
+            console.log("File deleted successfully");
+          }
+        });
+
+      return res.status(200).json({
+        success: true,
+        user: updateUser,
+        message: "Profile updated successfully",
+      });
+    }
+
+    const updateUser = await User.findByIdAndUpdate(userId, name, {
       new: true,
     }).select("-password");
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        console.log("Error deleting file: ", err);
-      } else {
-        console.log("File deleted successfully");
-      }
-    });
-
     return res.status(200).json({
       success: true,
       user: updateUser,
